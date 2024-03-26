@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+import { JSDOM } from "jsdom";
 import fs from "fs";
 import path from "path";
 import { spawnSync } from "child_process";
@@ -100,18 +101,39 @@ describe("All", () => {
     }
   });
 
-  test("When plausibleSiteDomain is specified, generates Plausible tracking code", () => {
+  test("When plausibleSiteDomain is specified, generates Plausible tracking code", async () => {
     const typedocConfig = {
       ...minTypedocConfig,
       plausibleSiteDomain: "sub.example.com",
     } as const;
+
+    // Is the script tag what we are looking for?
+    function isTargetScript(script: HTMLScriptElement): boolean {
+      return (
+        script.src === "https://plausible.io/js/script.js" &&
+        script.defer &&
+        script.getAttribute("data-domain") === typedocConfig.plausibleSiteDomain
+      );
+    }
+
+    // Does the collection of script contain the target script?
+    function containsTargetScript(
+      scripts: HTMLCollectionOf<HTMLScriptElement>,
+    ): boolean {
+      for (const script of scripts) {
+        if (isTargetScript(script)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
     runTypedoc(typedocConfig);
     const htmlPaths = htmlNames.map((elem) => path.join(testDir, "docs", elem));
     for (const htmlPath of htmlPaths) {
-      // Sanity check.
-      expect(fs.readFileSync(htmlPath, "utf-8")).toContain(
-        `<script defer data-domain="${typedocConfig.plausibleSiteDomain}" src="https://plausible.io/js/script.js"></script>`,
-      );
+      const dom = await JSDOM.fromFile(htmlPath, { contentType: "text/html" });
+      const scripts = dom.window.document.getElementsByTagName("script");
+      expect(containsTargetScript(scripts)).toBeTruthy();
     }
   });
 });

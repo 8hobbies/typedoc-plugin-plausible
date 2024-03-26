@@ -1,0 +1,53 @@
+{
+  "name": "@8hobbies/typedoc-plugin-plausible",
+  "version": "1.0.0",
+  "description": "Add plausible tracking code to typedoc-generated docs.",
+  "main": "dist/index.js",
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist",
+    "!/dist/**.test.d.ts",
+    "!/dist/**.test.js",
+    "!/dist/vitest.config.d.ts",
+    "!/dist/vitest.config.js"
+  ],
+  "scripts": {
+    "clean": "rimraf dist/",
+    "compile": "tsc --project tsconfig.json && tsc --project tsconfig.test.json",
+    "doc": "npm run compile && typedoc --plugin ./dist/index.js && replace-in-files --string '=\"assets/' --replacement '=\"/assets/' docs/404.html",
+    "format": "eslint --fix *.ts *.mjs && prettier . --write",
+    "lint": "eslint --report-unused-disable-directives --max-warnings=0 *.ts *.mjs && prettier . --check",
+    "prepack": "npm run clean && npm run compile",
+    "test": "npm run compile && vitest --run",
+    "test-all": "npm run compile && npm run lint && npm run test && npm run doc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/8hobbies/typedoc-plugin-plausible"
+  },
+  "keywords": [
+    "typedoc-plugin",
+    "Plausible Analytics"
+  ],
+  "author": "8 Hobbies, LLC",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://gitlab.com/8hobbies/typedoc-plugin-plausible/issues"
+  },
+  "homepage": "https://typedoc-plugin-plausible.8hobbies.com",
+  "devDependencies": {
+    "@8hobbies/eslint-conf-baseline": "^2.1.0",
+    "@8hobbies/typedoc-plugin-404": "^2.0.0",
+    "@types/node": "^20.11.30",
+    "globals": "^14.0.0",
+    "prettier": "^3.2.5",
+    "replace-in-files-cli": "^2.2.0",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.4.3",
+    "vitest": "^1.4.0"
+  },
+  "dependencies": {
+    "typedoc": "^0.25.12"
+  }
+}

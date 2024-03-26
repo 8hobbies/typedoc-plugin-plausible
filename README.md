@@ -1,4 +1,4 @@
-# typedoc-plugin-404: Add Plausible Tracking to TypeDoc Generated Docs
+# typedoc-plugin-plausible: Add Plausible Tracking to TypeDoc Generated Docs
 
 [![npm version](https://badge.fury.io/js/@8hobbies%2Ftypedoc-plugin-plausible.svg)](https://badge.fury.io/js/@8hobbies%2Ftypedoc-plugin-plausible)
 [![pipeline status](https://gitlab.com/8hobbies/typedoc-plugin-plausible/badges/master/pipeline.svg)](https://gitlab.com/8hobbies/typedoc-plugin-plausible/-/commits/master)
@@ -39,8 +39,7 @@ name you use at plausible:
 }
 ```
 
-The default value is `"404 Page Not Found"`. The content can be HTML. The content is always wrapped
-with `"<div class="404-content"></div>"` in the HTML output.
+If unspecified, no Plausible Analytics tracking code would be generated.
 
 ## Contributing
 

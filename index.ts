@@ -26,7 +26,7 @@ export function load(application: Application): void {
     type: ParameterType.String,
     help: `Domain name used by Plausible Analytics.`,
   });
-  application.renderer.hooks.on("body.end", (ctx) => {
+  application.renderer.hooks.on("head.end", (ctx) => {
     const plausibleSiteDomain = ctx.options.getValue(optionName);
     if (typeof plausibleSiteDomain !== "string") {
       throw TypeError(
@@ -38,8 +38,10 @@ export function load(application: Application): void {
       return JSX.createElement(JSX.Fragment, {});
     }
 
-    return JSX.createElement(JSX.Raw, {
-      html: `<script defer data-domain="${plausibleSiteDomain}" src="https://plausible.io/js/script.js"></script>`,
+    return JSX.createElement("script", {
+      defer: true,
+      "data-domain": plausibleSiteDomain,
+      src: "https://plausible.io/js/script.js",
     });
   });
 }

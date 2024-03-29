@@ -20,6 +20,9 @@ import fs from "fs";
 import path from "path";
 import { spawnSync } from "child_process";
 
+const npmExec = process.platform === "win32" ? "npm.cmd" : "npm";
+const npxExec = process.platform === "win32" ? "npx.cmd" : "npx";
+
 describe("All", () => {
   // Dir that contains files used for test.
   const testSrcDir = path.join(__dirname, "test-dir");
@@ -76,18 +79,18 @@ describe("All", () => {
       path.join(testDir, "typedoc.json"),
       JSON.stringify(typedocConfig),
     );
-    spawnSync("npm", ["pack"]);
-    spawnSync("npm", ["install"], {
+    spawnSync(npmExec, ["pack"]);
+    spawnSync(npmExec, ["install"], {
       cwd: testDir,
     });
     spawnSync(
-      "npm",
+      npmExec,
       ["install", `../8hobbies-typedoc-plugin-plausible-${packageVersion}.tgz`],
       {
         cwd: testDir,
       },
     );
-    spawnSync("npx", ["typedoc"], {
+    spawnSync(npxExec, ["typedoc", "--logLevel", "Verbose"], {
       cwd: testDir,
     });
   }
@@ -96,7 +99,6 @@ describe("All", () => {
     runTypedoc(minTypedocConfig);
     const htmlPaths = htmlNames.map((elem) => path.join(testDir, "docs", elem));
     for (const htmlPath of htmlPaths) {
-      // Sanity check.
       expect(fs.readFileSync(htmlPath, "utf-8")).not.toContain("plausible.io");
     }
   });

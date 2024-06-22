@@ -18,7 +18,7 @@
   "scripts": {
     "clean": "rimraf dist/",
     "compile": "tsc --project tsconfig.json && tsc --project tsconfig.test.json",
-    "doc": "npm run compile && typedoc && replace-in-files --string '=\"assets/' --replacement '=\"/assets/' docs/404.html",
+    "doc": "npm run compile && typedoc",
     "format": "eslint --fix *.ts *.mjs && prettier . .gitlab-ci.yml --write",
     "lint": "eslint --report-unused-disable-directives --max-warnings=0 *.ts *.mjs && prettier . .gitlab-ci.yml --check",
     "prepack": "npm run clean && npm run compile",
@@ -41,19 +41,17 @@
   "homepage": "https://typedoc-plausible.8hob.io",
   "devDependencies": {
     "@8hobbies/eslint-conf-baseline": "^2.1.1",
-    "@8hobbies/typedoc-plugin-404": "^2.2.0",
+    "@8hobbies/typedoc-plugin-404": "^3.0.0",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^20.14.8",
     "globals": "^15.6.0",
     "jsdom": "^24.1.0",
     "prettier": "^3.3.2",
-    "replace-in-files-cli": "^2.2.0",
     "rimraf": "^5.0.7",
-    "typedoc-plugin-extra-footer": "^1.0.1",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0"
   },
   "peerDependencies": {
-    "typedoc": "^0.25.13 || ^0.26.0"
+    "typedoc": "^0.26.0"
   }
 }

@@ -32,12 +32,12 @@ Or add the plugin to your typedoc.json file:
 
 ## Configuration
 
-This plugin recognizes a `plausibleDomain` option in your `typedoc.json`. You can specify the domain
+This plugin recognizes a `plausibleSiteDomain` option in your `typedoc.json`. You can specify the domain
 name you use at plausible:
 
 ```json
 {
-  "plausibleDomain": "subdomain.example.com"
+  "plausibleSiteDomain": "subdomain.example.com"
 }
 ```
 

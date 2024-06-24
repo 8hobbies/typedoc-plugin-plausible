@@ -149,4 +149,80 @@ describe("All", () => {
       expect(containsTargetScript(scripts)).toBeTruthy();
     }
   });
+
+  test("When plausibleSiteOrigin is specified, generates Plausible tracking code with specified origin", async () => {
+    const typedocConfig = {
+      ...minTypedocConfig,
+      plausibleSiteDomain: "sub.example.com",
+      plausibleSiteOrigin: "my.owndomain.com/js/",
+    } as const;
+
+    // Is the script tag what we are looking for?
+    function isTargetScript(script: HTMLScriptElement): boolean {
+      return (
+        script.src ===
+          `https://${typedocConfig.plausibleSiteOrigin}script.js` &&
+        script.defer &&
+        script.getAttribute("data-domain") === typedocConfig.plausibleSiteDomain
+      );
+    }
+
+    // Does the collection of script contain the target script?
+    function containsTargetScript(
+      scripts: HTMLCollectionOf<HTMLScriptElement>,
+    ): boolean {
+      for (const script of scripts) {
+        if (isTargetScript(script)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    runTypedoc(typedocConfig);
+    const htmlPaths = htmlNames.map((elem) => path.join(testDir, "docs", elem));
+    for (const htmlPath of htmlPaths) {
+      const dom = await JSDOM.fromFile(htmlPath, { contentType: "text/html" });
+      const scripts = dom.window.document.getElementsByTagName("script");
+      expect(containsTargetScript(scripts)).toBeTruthy();
+    }
+  });
+
+  test("When plausibleSiteOrigin is specified, generates Plausible tracking code with specified origin and corrects backslash", async () => {
+    const typedocConfig = {
+      ...minTypedocConfig,
+      plausibleSiteDomain: "sub.example.com",
+      plausibleSiteOrigin: "my.owndomain.com/myCustomDir",
+    } as const;
+
+    // Is the script tag what we are looking for?
+    function isTargetScript(script: HTMLScriptElement): boolean {
+      return (
+        script.src ===
+          `https://${typedocConfig.plausibleSiteOrigin}/script.js` &&
+        script.defer &&
+        script.getAttribute("data-domain") === typedocConfig.plausibleSiteDomain
+      );
+    }
+
+    // Does the collection of script contain the target script?
+    function containsTargetScript(
+      scripts: HTMLCollectionOf<HTMLScriptElement>,
+    ): boolean {
+      for (const script of scripts) {
+        if (isTargetScript(script)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    runTypedoc(typedocConfig);
+    const htmlPaths = htmlNames.map((elem) => path.join(testDir, "docs", elem));
+    for (const htmlPath of htmlPaths) {
+      const dom = await JSDOM.fromFile(htmlPath, { contentType: "text/html" });
+      const scripts = dom.window.document.getElementsByTagName("script");
+      expect(containsTargetScript(scripts)).toBeTruthy();
+    }
+  });
 });

@@ -17,22 +17,38 @@
 
 import { Application, JSX, ParameterType } from "typedoc";
 
-const optionName = "plausibleSiteDomain" as const;
+const optionSiteName = "plausibleSiteDomain" as const;
+const optionSiteOrigin = "plausibleSiteOrigin" as const;
 
 /** @ignore */
 export function load(application: Application): void {
   application.options.addDeclaration({
-    name: optionName,
+    name: optionSiteName,
     type: ParameterType.String,
     help: `Domain name used by Plausible Analytics.`,
   });
+  application.options.addDeclaration({
+    name: optionSiteOrigin,
+    type: ParameterType.String,
+    help: `Base URL to get Plausible Analytics script from and report to. Should be everything but 'script.js'`,
+    defaultValue: "plausible.io/js/",
+  });
   application.renderer.hooks.on("head.end", (ctx) => {
-    const plausibleSiteDomain = ctx.options.getValue(optionName);
+    const plausibleSiteDomain = ctx.options.getValue(optionSiteName);
     if (typeof plausibleSiteDomain !== "string") {
       throw TypeError(
-        `Unexpected ${optionName} type: ${JSON.stringify(plausibleSiteDomain)}`,
+        `Unexpected ${optionSiteName} type: ${JSON.stringify(plausibleSiteDomain)}`,
       );
     }
+    const plausibleSiteOrigin = ctx.options.getValue(optionSiteOrigin);
+    if (typeof plausibleSiteOrigin !== "string") {
+      throw TypeError(
+        `Unexpected ${optionSiteOrigin} type: ${JSON.stringify(plausibleSiteOrigin)}`,
+      );
+    }
+    const plausibleSrc = !plausibleSiteOrigin.endsWith("/")
+      ? `${plausibleSiteOrigin}/`
+      : plausibleSiteOrigin;
     if (plausibleSiteDomain === "") {
       // No site specified.
       return JSX.createElement(JSX.Fragment, {});
@@ -41,7 +57,7 @@ export function load(application: Application): void {
     return JSX.createElement("script", {
       defer: true,
       "data-domain": plausibleSiteDomain,
-      src: "https://plausible.io/js/script.js",
+      src: `https://${plausibleSrc}script.js`,
     });
   });
 }

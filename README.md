@@ -43,6 +43,21 @@ name you use at plausible:
 
 If unspecified, no Plausible Analytics tracking code would be generated.
 
+Additionally, the domain from which the Plausible client script is sourced from can be specified using `plausibleSiteOrigin` in your `typedoc.json`:
+
+```json
+{
+  "plausibleSiteDomain": "subdomain.example.com",
+  "plausibleSiteOrigin": "my.domain.com/js"
+}
+```
+
+produces
+
+```html
+<script defer data-domain="subdomain.example.com" src="https://my.domain.com/js/script.js"></script>
+```
+
 ## Contributing
 
 Source code is available on [GitLab][].

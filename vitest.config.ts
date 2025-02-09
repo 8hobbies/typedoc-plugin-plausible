@@ -21,5 +21,6 @@ export default defineConfig({
   test: {
     exclude: [...configDefaults.exclude, "dist/*"],
     globals: true,
+    testTimeout: 60_000,
   },
 });

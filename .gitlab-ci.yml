@@ -1,4 +1,4 @@
-# Copyright 2024 8 Hobbies, LLC <hong@8hobbies.com>
+# Copyright 2024-2025 8 Hobbies, LLC <hong@8hobbies.com>
 #
 # Licensed under the Apache License, Version 2.0(the "License");
 # you may not use this file except in compliance with the License.
@@ -19,14 +19,14 @@ include:
   - component: gitlab.com/8hobbies/compress-pages/compress-pages@v1.2.0
 
 lint:
-  image: "node:22.14.0"
+  image: "node:24.9.0"
   script:
     - npm install
     - npm run lint
   interruptible: true
 
 .docs:
-  image: "node:22.14.0"
+  image: "node:24.9.0"
   script:
     - npm install
     - npm run doc
@@ -53,18 +53,9 @@ runtime-linux:
   parallel:
     matrix:
       - IMAGE:
-          - "node:18"
           - "node:20"
           - "node:22"
-
-runtime-windows:
-  extends: ".runtime"
-  tags:
-    - saas-windows-medium-amd64
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-      when: never
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+          - "node:24"
 
 runtime-macos:
   extends: ".runtime"

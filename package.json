@@ -43,7 +43,7 @@
     "@8hobbies/eslint-conf-baseline": "6.0.0",
     "@types/jsdom": "27.0.0",
     "@types/node": "24.10.4",
-    "globals": "16.5.0",
+    "globals": "17.1.0",
     "jsdom": "27.3.0",
     "prettier": "3.7.4",
     "rimraf": "6.1.2",
